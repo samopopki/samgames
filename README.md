@@ -1,2 +1,0 @@
-# samgames
-samgames server irani
