@@ -1,204 +1,833 @@
 <!DOCTYPE html>
 <html lang="fa" dir="rtl">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>pixelrp | سرور رول‌پلی ایران</title>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>SamGames | دیتابیس Supabase</title>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
         }
+
         body {
-            font-family: 'Tahoma', 'Vazir', sans-serif;
-            background: #0a0e17;
-            color: #e8edf5;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #07080c;
             min-height: 100vh;
-            padding: 30px 20px;
+            padding: 20px;
+            color: #e8edf5;
+            background-image: 
+                radial-gradient(ellipse at 10% 20%, rgba(108, 92, 231, 0.12) 0%, transparent 50%),
+                radial-gradient(ellipse at 90% 80%, rgba(0, 210, 255, 0.08) 0%, transparent 50%);
+            display: flex;
+            justify-content: center;
+            align-items: center;
         }
+
         .container {
-            max-width: 1000px;
-            margin: 0 auto;
+            max-width: 900px;
+            width: 100%;
+            background: rgba(18, 22, 33, 0.92);
+            backdrop-filter: blur(20px);
+            border-radius: 40px;
+            padding: 40px 35px;
+            border: 1px solid rgba(255, 255, 255, 0.04);
+            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.8);
         }
+
         .header {
             display: flex;
-            justify-content: space-between;
             align-items: center;
+            justify-content: space-between;
             flex-wrap: wrap;
             gap: 15px;
-            border-bottom: 1px solid #1e2740;
-            padding-bottom: 20px;
-            margin-bottom: 30px;
+            margin-bottom: 25px;
         }
-        .logo {
-            font-size: 36px;
+
+        .header .brand {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+        }
+
+        .header .brand .icon {
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, #6c5ce7, #a29bfe);
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 22px;
+            color: white;
+            box-shadow: 0 8px 24px rgba(108, 92, 231, 0.35);
+        }
+
+        .header .brand h1 {
+            font-family: 'Orbitron', monospace;
+            font-size: 1.5rem;
             font-weight: 900;
-            background: linear-gradient(135deg, #f5b042, #fad974);
+            background: linear-gradient(to right, #f0f4ff, #a29bfe);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
+            background-clip: text;
         }
-        .logo span {
-            font-size: 14px;
-            -webkit-text-fill-color: #8892b0;
-            background: none;
-        }
-        .user-badge {
-            background: #1a2340;
-            padding: 8px 22px;
-            border-radius: 50px;
-            font-size: 14px;
-            border: 1px solid #2f3b60;
-        }
-        .hero {
-            text-align: center;
-            padding: 40px 20px;
-            background: linear-gradient(145deg, #111a2e, #0d1422);
-            border-radius: 30px;
-            border: 1px solid rgba(245, 176, 66, 0.15);
-            margin-bottom: 35px;
-        }
-        .hero h1 {
-            font-size: 42px;
-            background: linear-gradient(135deg, #f5b042, #fad974);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            margin-bottom: 10px;
-        }
-        .hero p {
-            color: #8892b0;
-            font-size: 18px;
-        }
-        .hero .ip {
-            display: inline-block;
-            background: #0a101f;
-            padding: 12px 35px;
-            border-radius: 50px;
-            font-family: monospace;
-            font-size: 20px;
-            color: #f5b042;
-            border: 1px solid #f5b04244;
-            margin-top: 15px;
-            direction: ltr;
-        }
-        .section-title {
-            font-size: 24px;
-            margin: 30px 0 20px;
-            color: #f5b042;
-            border-right: 4px solid #f5b042;
-            padding-right: 15px;
-        }
-        .server-card {
-            background: rgba(18, 25, 40, 0.9);
-            border-radius: 20px;
-            padding: 22px 28px;
-            margin-bottom: 16px;
-            border: 1px solid rgba(255, 215, 100, 0.08);
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            flex-wrap: wrap;
-            gap: 15px;
-            transition: 0.3s;
-        }
-        .server-card:hover {
-            border-color: #f5b042;
-            transform: translateX(6px);
-        }
-        .server-info {
-            display: flex;
-            flex-direction: column;
-            gap: 4px;
-        }
-        .server-name {
-            font-size: 20px;
-            font-weight: 700;
-            color: #f5b042;
-        }
-        .server-ip {
-            font-size: 15px;
-            color: #a0aac8;
-            direction: ltr;
-            font-family: monospace;
-            background: #111a2e;
-            padding: 4px 14px;
-            border-radius: 8px;
-            display: inline-block;
-            border: 1px solid #1f2a48;
-        }
-        .server-modes {
-            font-size: 14px;
-            color: #c8d0e8;
-        }
-        .server-modes span {
-            background: #1a2340;
-            padding: 2px 12px;
-            border-radius: 50px;
-            margin: 0 3px;
-            font-size: 12px;
-            display: inline-block;
-            margin-top: 4px;
-        }
-        .server-status {
+
+        .status-db {
+            background: rgba(0, 210, 255, 0.08);
+            border: 1px solid rgba(0, 210, 255, 0.1);
+            padding: 8px 18px;
+            border-radius: 100px;
+            font-size: 0.8rem;
+            color: #7bdfc2;
             display: flex;
             align-items: center;
             gap: 8px;
-            font-size: 14px;
-            font-weight: 600;
         }
-        .status-online {
-            color: #4ade80;
-        }
-        .status-offline {
-            color: #f87171;
-        }
-        .status-dot {
-            width: 10px;
-            height: 10px;
+
+        .status-db .dot {
+            width: 8px;
+            height: 8px;
+            background: #7bdfc2;
             border-radius: 50%;
-            display: inline-block;
+            animation: blink 1.2s infinite;
         }
-        .dot-online {
-            background: #4ade80;
+
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.2; }
         }
-        .dot-offline {
-            background: #f87171;
+
+        .grid-2col {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-bottom: 25px;
         }
-        .footer {
-            text-align: center;
+
+        @media (max-width: 650px) {
+            .grid-2col {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .form-box {
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 20px;
+            padding: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.04);
+        }
+
+        .form-box h3 {
+            margin-bottom: 14px;
+            color: #a29bfe;
+        }
+
+        .form-group {
+            margin-bottom: 12px;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 10px 16px;
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            border-radius: 100px;
+            color: #e8edf5;
+            font-size: 0.9rem;
+            outline: none;
+            transition: 0.3s;
+        }
+
+        .form-group input:focus {
+            border-color: rgba(108, 92, 231, 0.3);
+            background: rgba(255, 255, 255, 0.06);
+        }
+
+        .btn {
+            padding: 10px 24px;
+            border: none;
+            border-radius: 100px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.3s;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.9rem;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #6c5ce7, #a29bfe);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: scale(1.03);
+            box-shadow: 0 8px 24px rgba(108, 92, 231, 0.3);
+        }
+
+        .btn-success {
+            background: linear-gradient(135deg, #00b894, #00d2ff);
+            color: white;
+        }
+
+        .btn-danger {
+            background: linear-gradient(135deg, #ff6b6b, #ee5a24);
+            color: white;
+        }
+
+        .btn-warning {
+            background: linear-gradient(135deg, #fdcb6e, #f39c12);
+            color: white;
+        }
+
+        .users-list {
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 20px;
+            padding: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.04);
+            margin-top: 20px;
+        }
+
+        .users-list h3 {
+            margin-bottom: 14px;
+            color: #a29bfe;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .users-list .count {
+            font-size: 0.8rem;
+            color: #8892b0;
+            font-weight: 400;
+        }
+
+        .user-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 8px 12px;
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 12px;
+            margin-bottom: 6px;
+            border: 1px solid rgba(255, 255, 255, 0.03);
+        }
+
+        .user-item .info {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .user-item .info .avatar {
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #6c5ce7, #a29bfe);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            font-weight: 700;
+            color: white;
+        }
+
+        .user-item .role-tag {
+            font-size: 0.65rem;
+            padding: 2px 12px;
+            border-radius: 100px;
+        }
+
+        .role-tag.admin {
+            background: rgba(255, 165, 0, 0.12);
+            color: #ffb347;
+        }
+
+        .role-tag.user {
+            background: rgba(108, 92, 231, 0.1);
+            color: #a29bfe;
+        }
+
+        .user-item .actions {
+            display: flex;
+            gap: 6px;
+        }
+
+        .user-item .actions button {
+            padding: 3px 12px;
+            border: none;
+            border-radius: 100px;
+            font-size: 0.7rem;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .btn-make-admin {
+            background: rgba(255, 165, 0, 0.12);
+            color: #ffb347;
+        }
+
+        .btn-make-admin:hover {
+            background: rgba(255, 165, 0, 0.2);
+        }
+
+        .btn-remove-admin {
+            background: rgba(255, 107, 107, 0.1);
+            color: #ff6b6b;
+        }
+
+        .btn-remove-admin:hover {
+            background: rgba(255, 107, 107, 0.2);
+        }
+
+        .btn-delete {
+            background: rgba(255, 0, 0, 0.08);
+            color: #ff6b6b;
+        }
+
+        .btn-delete:hover {
+            background: rgba(255, 0, 0, 0.15);
+        }
+
+        .empty-msg {
             color: #5a6488;
-            margin-top: 40px;
-            padding-top: 20px;
-            border-top: 1px solid #1e2740;
-            font-size: 14px;
+            text-align: center;
+            padding: 20px;
         }
-        @media (max-width: 700px) {
-            .hero h1 { font-size: 28px; }
-            .server-card { flex-direction: column; align-items: flex-start; }
+
+        .toast {
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(18, 22, 33, 0.95);
+            backdrop-filter: blur(20px);
+            padding: 14px 28px;
+            border-radius: 16px;
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
+            z-index: 999;
+            display: none;
+            max-width: 90%;
+            text-align: center;
+            animation: slideDown 0.4s ease;
+        }
+
+        @keyframes slideDown {
+            from { transform: translateX(-50%) translateY(-30px); opacity: 0; }
+            to { transform: translateX(-50%) translateY(0); opacity: 1; }
+        }
+
+        .toast.show {
+            display: block;
+        }
+        .toast.success { border-color: rgba(0, 210, 255, 0.2); }
+        .toast.error { border-color: rgba(255, 107, 107, 0.2); }
+        .toast.warning { border-color: rgba(255, 165, 0, 0.2); }
+
+        .footer {
+            margin-top: 25px;
+            padding-top: 18px;
+            border-top: 1px solid rgba(255, 255, 255, 0.04);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 12px;
+            font-size: 0.75rem;
+            color: #5a6488;
+        }
+
+        .footer .social i {
+            font-size: 1.1rem;
+            margin-right: 14px;
+            color: #5a6488;
+            transition: 0.2s;
+            cursor: pointer;
+        }
+
+        .footer .social i:hover {
+            color: #6c5ce7;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 10px;
+            color: #8892b0;
         }
     </style>
 </head>
 <body>
 
+<div class="toast" id="toast"></div>
+
 <div class="container">
 
-    <!-- HEADER -->
+    <!-- هدر -->
     <div class="header">
-        <div class="logo">⚡ pixelrp <span>| رول‌پلی ایران</span></div>
-        <div class="user-badge">👤 <span id="displayUser">مهمان</span></div>
+        <div class="brand">
+            <div class="icon"><i class="fas fa-database"></i></div>
+            <h1>SamGames DB</h1>
+        </div>
+        <div class="status-db" id="dbStatus">
+            <span class="dot"></span>
+            در حال اتصال...
+        </div>
     </div>
 
-    <!-- HERO -->
-    <div class="hero">
-        <h1>🎭 سرور رول‌پلی pixelrp</h1>
-        <p>بهترین تجربه نقش‌آفرینی در ماینکرفت ایران</p>
-        <div class="ip">PixelRp.aternos.me</div>
-        <p style="margin-top: 12px; font-size: 14px; color: #5a6488;">نسخه ۱.۲۰.۴ - ۱.۲۱ | ۲۴/۷ فعال</p>
+    <!-- فرم‌ها -->
+    <div class="grid-2col">
+
+        <!-- ثبت‌نام -->
+        <div class="form-box">
+            <h3>📝 ثبت‌نام کاربر</h3>
+            <div class="form-group">
+                <input type="text" id="regUser" placeholder="نام کاربری" />
+            </div>
+            <div class="form-group">
+                <input type="password" id="regPass" placeholder="رمز عبور" />
+            </div>
+            <div class="form-group">
+                <input type="email" id="regEmail" placeholder="ایمیل" />
+            </div>
+            <button class="btn btn-primary" onclick="registerUser()">
+                <i class="fas fa-user-plus"></i> ثبت‌نام
+            </button>
+        </div>
+
+        <!-- ورود -->
+        <div class="form-box">
+            <h3>🔑 ورود به حساب</h3>
+            <div class="form-group">
+                <input type="text" id="loginUser" placeholder="نام کاربری" />
+            </div>
+            <div class="form-group">
+                <input type="password" id="loginPass" placeholder="رمز عبور" />
+            </div>
+            <button class="btn btn-success" onclick="loginUser()">
+                <i class="fas fa-sign-in-alt"></i> ورود
+            </button>
+        </div>
     </div>
 
-    <!-- SERVER LIST -->
-    <h2 class="section-title">🌍 سرور رول پلی</h2>
+    <!-- لیست کاربران -->
+    <div class="users-list">
+        <h3>
+            👥 کاربران
+            <span class="count" id="userCount">۰ کاربر</span>
+        </h3>
+        <div id="userList">
+            <div class="loading">در حال بارگذاری...</div>
+        </div>
+    </div>
 
-    <div class="server-card">
-        <div class="server-info">
-            <div class="server-name
+    <!-- فوتر -->
+    <div class="footer">
+        <span>© ۲۰۲۶ SamGames · دیتابیس Supabase</span>
+        <div class="social">
+            <i class="fab fa-discord"></i>
+            <i class="fab fa-youtube"></i>
+            <i class="fab fa-telegram"></i>
+            <i class="fab fa-instagram"></i>
+        </div>
+    </div>
+
+</div>
+
+<script>
+    // =============================================
+    // ====== اتصال به Supabase ======
+    // =============================================
+
+    // 🔴 اینجا اطلاعات پروژه خودت رو وارد کن!
+    const supabaseUrl = 'https://your-project.supabase.co';    // ← عوض کن
+    const supabaseKey = 'your-anon-key';                       // ← عوض کن
+
+    const supabase = supabase.createClient(supabaseUrl, supabaseKey);
+
+    // =============================================
+    // ====== توابع دیتابیس ======
+    // =============================================
+
+    // 📝 ثبت‌نام کاربر
+    async function saveUser(username, password, email) {
+        try {
+            const { data, error } = await supabase
+                .from('users')
+                .insert([{ 
+                    username, 
+                    password, 
+                    email, 
+                    role: 'user' 
+                }]);
+
+            if (error) {
+                console.error('❌ خطا در ثبت‌نام:', error);
+                return { success: false, error: error.message };
+            }
+
+            console.log('✅ کاربر ثبت شد:', data);
+            return { success: true, data: data };
+        } catch (err) {
+            console.error('❌ خطا:', err);
+            return { success: false, error: err.message };
+        }
+    }
+
+    // 🔑 ورود کاربر
+    async function loginUser(username, password) {
+        try {
+            const { data, error } = await supabase
+                .from('users')
+                .select('*')
+                .eq('username', username)
+                .eq('password', password);
+
+            if (error) {
+                console.error('❌ خطا در ورود:', error);
+                return { success: false, error: error.message };
+            }
+
+            if (data.length === 0) {
+                return { success: false, error: 'نام کاربری یا رمز عبور اشتباه است!' };
+            }
+
+            console.log('✅ ورود موفق:', data[0]);
+            return { success: true, user: data[0] };
+        } catch (err) {
+            console.error('❌ خطا:', err);
+            return { success: false, error: err.message };
+        }
+    }
+
+    // 📋 دریافت همه کاربران
+    async function getUsers() {
+        try {
+            const { data, error } = await supabase
+                .from('users')
+                .select('*')
+                .order('created_at', { ascending: false });
+
+            if (error) {
+                console.error('❌ خطا در دریافت کاربران:', error);
+                return { success: false, error: error.message };
+            }
+
+            console.log('📋 لیست کاربران:', data);
+            return { success: true, users: data };
+        } catch (err) {
+            console.error('❌ خطا:', err);
+            return { success: false, error: err.message };
+        }
+    }
+
+    // 👑 ادمین کردن کاربر
+    async function makeAdmin(username) {
+        try {
+            const { data, error } = await supabase
+                .from('users')
+                .update({ role: 'admin' })
+                .eq('username', username);
+
+            if (error) {
+                console.error('❌ خطا:', error);
+                return { success: false, error: error.message };
+            }
+
+            console.log('✅ ادمین شد:', data);
+            return { success: true };
+        } catch (err) {
+            console.error('❌ خطا:', err);
+            return { success: false, error: err.message };
+        }
+    }
+
+    // 🔄 حذف ادمین از کاربر
+    async function removeAdmin(username) {
+        try {
+            const { data, error } = await supabase
+                .from('users')
+                .update({ role: 'user' })
+                .eq('username', username);
+
+            if (error) {
+                console.error('❌ خطا:', error);
+                return { success: false, error: error.message };
+            }
+
+            console.log('✅ ادمین حذف شد:', data);
+            return { success: true };
+        } catch (err) {
+            console.error('❌ خطا:', err);
+            return { success: false, error: err.message };
+        }
+    }
+
+    // 🗑️ حذف کاربر
+    async function deleteUser(username) {
+        try {
+            const { error } = await supabase
+                .from('users')
+                .delete()
+                .eq('username', username);
+
+            if (error) {
+                console.error('❌ خطا:', error);
+                return { success: false, error: error.message };
+            }
+
+            console.log('✅ کاربر حذف شد');
+            return { success: true };
+        } catch (err) {
+            console.error('❌ خطا:', err);
+            return { success: false, error: err.message };
+        }
+    }
+
+    // 🔌 تست اتصال به دیتابیس
+    async function testConnection() {
+        try {
+            const { data, error } = await supabase
+                .from('users')
+                .select('count', { count: 'exact', head: true });
+
+            if (error) {
+                console.error('❌ اتصال به دیتابیس ناموفق:', error);
+                return false;
+            }
+
+            console.log('✅ اتصال به دیتابیس موفق!');
+            return true;
+        } catch (err) {
+            console.error('❌ خطا:', err);
+            return false;
+        }
+    }
+
+    // =============================================
+    // ====== توابع UI ======
+    // =============================================
+
+    // 📢 نمایش پیام
+    function showToast(message, type = 'success') {
+        const toast = document.getElementById('toast');
+        toast.textContent = message;
+        toast.className = 'toast show ' + type;
+        setTimeout(() => toast.classList.remove('show'), 3500);
+    }
+
+    // 👥 رندر لیست کاربران
+    async function renderUsers() {
+        const listEl = document.getElementById('userList');
+        const countEl = document.getElementById('userCount');
+
+        listEl.innerHTML = '<div class="loading">⏳ در حال بارگذاری...</div>';
+
+        const result = await getUsers();
+
+        if (!result.success) {
+            listEl.innerHTML = `<div class="empty-msg">❌ ${result.error}</div>`;
+            return;
+        }
+
+        const users = result.users;
+
+        if (users.length === 0) {
+            listEl.innerHTML = '<div class="empty-msg">📭 هنوز کاربری ثبت نشده است</div>';
+            countEl.textContent = '۰ کاربر';
+            return;
+        }
+
+        countEl.textContent = `${users.length} کاربر`;
+
+        let html = '';
+        users.forEach(user => {
+            const isAdmin = user.role === 'admin';
+            const isMainAdmin = user.username === 'admin';
+
+            html += `
+                <div class="user-item">
+                    <div class="info">
+                        <div class="avatar">${user.username.charAt(0).toUpperCase()}</div>
+                        <div>
+                            <strong>${user.username}</strong>
+                            <span style="font-size:0.7rem;color:#5a6488;margin-right:8px;">${user.email || ''}</span>
+                        </div>
+                        <span class="role-tag ${isAdmin ? 'admin' : 'user'}">
+                            ${isAdmin ? '👑 ادمین' : '👤 کاربر'}
+                        </span>
+                    </div>
+                    <div class="actions">
+                        ${!isAdmin ? `
+                            <button class="btn-make-admin" onclick="makeAdminUser('${user.username}')">
+                                <i class="fas fa-crown"></i>
+                            </button>
+                        ` : `
+                            ${!isMainAdmin ? `
+                                <button class="btn-remove-admin" onclick="removeAdminUser('${user.username}')">
+                                    <i class="fas fa-user"></i>
+                                </button>
+                            ` : ''}
+                        `}
+                        ${!isMainAdmin ? `
+                            <button class="btn-delete" onclick="deleteUserUser('${user.username}')">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        ` : ''}
+                    </div>
+                </div>
+            `;
+        });
+
+        listEl.innerHTML = html;
+    }
+
+    // =============================================
+    // ====== توابع عمومی (از HTML صدا زده می‌شوند) ======
+    // =============================================
+
+    // 📝 ثبت‌نام
+    window.registerUser = async function() {
+        const username = document.getElementById('regUser').value.trim();
+        const password = document.getElementById('regPass').value.trim();
+        const email = document.getElementById('regEmail').value.trim();
+
+        if (!username || !password || !email) {
+            showToast('⚠️ لطفاً همه فیلدها را پر کنید!', 'error');
+            return;
+        }
+
+        if (username.length < 3) {
+            showToast('⚠️ نام کاربری باید حداقل ۳ کاراکتر باشد!', 'error');
+            return;
+        }
+
+        if (password.length < 4) {
+            showToast('⚠️ رمز عبور باید حداقل ۴ کاراکتر باشد!', 'error');
+            return;
+        }
+
+        if (!email.includes('@')) {
+            showToast('⚠️ ایمیل معتبر وارد کنید!', 'error');
+            return;
+        }
+
+        const result = await saveUser(username, password, email);
+
+        if (result.success) {
+            showToast('✅ کاربر با موفقیت ثبت شد!', 'success');
+            document.getElementById('regUser').value = '';
+            document.getElementById('regPass').value = '';
+            document.getElementById('regEmail').value = '';
+            renderUsers();
+        } else {
+            showToast('❌ ' + result.error, 'error');
+        }
+    };
+
+    // 🔑 ورود
+    window.loginUser = async function() {
+        const username = document.getElementById('loginUser').value.trim();
+        const password = document.getElementById('loginPass').value.trim();
+
+        if (!username || !password) {
+            showToast('⚠️ لطفاً نام کاربری و رمز عبور را وارد کنید!', 'error');
+            return;
+        }
+
+        const result = await loginUser(username, password);
+
+        if (result.success) {
+            const user = result.user;
+            showToast(`✅ خوش آمدید ${user.username}! ${user.role === 'admin' ? '👑 ادمین عزیز' : ''}`, 'success');
+            document.getElementById('loginUser').value = '';
+            document.getElementById('loginPass').value = '';
+            renderUsers();
+        } else {
+            showToast('❌ ' + result.error, 'error');
+        }
+    };
+
+    // 👑 ادمین کردن
+    window.makeAdminUser = async function(username) {
+        if (!confirm(`آیا مطمئن هستید که "${username}" را ادمین کنید؟`)) return;
+
+        const result = await makeAdmin(username);
+        if (result.success) {
+            showToast(`✅ ${username} به ادمین ارتقا یافت!`, 'success');
+            renderUsers();
+        } else {
+            showToast('❌ ' + result.error, 'error');
+        }
+    };
+
+    // 🔄 حذف ادمین
+    window.removeAdminUser = async function(username) {
+        if (!confirm(`آیا مطمئن هستید که ادمین بودن "${username}" را لغو کنید؟`)) return;
+
+        const result = await removeAdmin(username);
+        if (result.success) {
+            showToast(`✅ ${username} به کاربر عادی تبدیل شد`, 'success');
+            renderUsers();
+        } else {
+            showToast('❌ ' + result.error, 'error');
+        }
+    };
+
+    // 🗑️ حذف کاربر
+    window.deleteUserUser = async function(username) {
+        if (!confirm(`⚠️ آیا مطمئن هستید که کاربر "${username}" را حذف کنید؟`)) return;
+
+        const result = await deleteUser(username);
+        if (result.success) {
+            showToast(`🗑️ کاربر ${username} حذف شد`, 'warning');
+            renderUsers();
+        } else {
+            showToast('❌ ' + result.error, 'error');
+        }
+    };
+
+    // =============================================
+    // ====== اجرای اولیه ======
+    // =============================================
+
+    async function init() {
+        const statusEl = document.getElementById('dbStatus');
+
+        const connected = await testConnection();
+
+        if (connected) {
+            statusEl.innerHTML = `
+                <span class="dot"></span>
+                ✅ دیتابیس متصل
+            `;
+        } else {
+            statusEl.innerHTML = `
+                <span style="color:#ff6b6b;">●</span>
+                ❌ اتصال ناموفق
+            `;
+            showToast('⚠️ اتصال به دیتابیس برقرار نشد! تنظیمات را بررسی کنید.', 'error');
+        }
+
+        renderUsers();
+    }
+
+    init();
+
+    // نمایش در کنسول
+    console.log('🎮 SamGames با دیتابیس Supabase');
+    console.log('📌 توابع آماده:');
+    console.log('  - saveUser(username, password, email)');
+    console.log('  - loginUser(username, password)');
+    console.log('  - getUsers()');
+    console.log('  - makeAdmin(username)');
+    console.log('  - removeAdmin(username)');
+    console.log('  - deleteUser(username)');
+</script>
+
+</body>
+</html>
